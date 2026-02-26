@@ -132,3 +132,127 @@ export const updateSiteSettings = async (data: SiteSettings) => {
   const { setDoc } = await import("firebase/firestore"); 
   return await setDoc(docRef, data, { merge: true });
 };
+
+export const seedData = async () => {
+  const { writeBatch } = await import("firebase/firestore");
+  const batch = writeBatch(db);
+
+  // 1. Create Categories
+  const categories = [
+    { name: "Apartments", slug: "apartments", isActive: true, order: 0 },
+    { name: "Hostels", slug: "hostels", isActive: true, order: 1 },
+    { name: "Bedsitters", slug: "bedsitters", isActive: true, order: 2 }
+  ];
+
+  const categoryIds: string[] = [];
+  for (const cat of categories) {
+    const ref = doc(collection(db, "categories"));
+    batch.set(ref, cat);
+    categoryIds.push(ref.id);
+  }
+
+  // 2. Create Agent
+  const agentRef = doc(collection(db, "agents"));
+  const agentId = agentRef.id;
+  batch.set(agentRef, {
+    name: "UniHub Agent",
+    phone: "+254 113 562686",
+    whatsappNumber: "+254 113 562686",
+    isActive: true,
+    profilePhotoURL: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256&h=256"
+  });
+
+  // 3. Create Properties
+  const properties = [
+    {
+      title: "Modern Studio Apartment near Campus",
+      categoryId: categoryIds[2], // Bedsitter/Studio
+      price: 15000,
+      deposit: 15000,
+      location: "Juja, Gate C",
+      description: "A spacious modern studio apartment located just 5 minutes from the main campus gate. Features include tiled floors, instant shower, and secure biometric access.",
+      features: ["WiFi", "Water 24/7", "Security", "Tiled Floors"],
+      agentId: agentId,
+      status: "available",
+      media: [
+        {
+          public_id: "sample1",
+          secure_url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1000",
+          resource_type: "image",
+          format: "jpg",
+          order: 0
+        },
+        {
+          public_id: "sample2",
+          secure_url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=1000",
+          resource_type: "image",
+          format: "jpg",
+          order: 1
+        }
+      ],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    },
+    {
+      title: "Premium 1 Bedroom Apartment",
+      categoryId: categoryIds[0], // Apartment
+      price: 25000,
+      deposit: 25000,
+      location: "Ruiru, Kimbo",
+      description: "Luxury 1 bedroom apartment with balcony, ample parking, and CCTV surveillance. Ideal for students who want privacy and comfort.",
+      features: ["Balcony", "Parking", "CCTV", "Fiber Internet"],
+      agentId: agentId,
+      status: "available",
+      media: [
+        {
+          public_id: "sample3",
+          secure_url: "https://images.unsplash.com/photo-1502005229766-528352261275?auto=format&fit=crop&q=80&w=1000",
+          resource_type: "image",
+          format: "jpg",
+          order: 0
+        }
+      ],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    },
+    {
+      title: "Affordable Hostel for Ladies",
+      categoryId: categoryIds[1], // Hostel
+      price: 8000,
+      deposit: 8000,
+      location: "Juja, Gachororo",
+      description: "Safe and clean hostel for ladies. Shared amenities but very well maintained. Matron available 24/7.",
+      features: ["Matron", "Study Area", "Hot Shower"],
+      agentId: agentId,
+      status: "available",
+      media: [
+        {
+          public_id: "sample4",
+          secure_url: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=1000",
+          resource_type: "image",
+          format: "jpg",
+          order: 0
+        }
+      ],
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }
+  ];
+
+  for (const prop of properties) {
+    const ref = doc(collection(db, "properties"));
+    batch.set(ref, prop);
+  }
+
+  // 4. Update Settings
+  const settingsRef = doc(db, "settings", "general");
+  batch.set(settingsRef, {
+    heroTitle: "Find your perfect home",
+    heroSubtitle: "Discover premium student accommodation near you. Safe, affordable, and convenient.",
+    heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=2000",
+    ctaText: "Browse Listings",
+    featuredProperties: []
+  }, { merge: true });
+
+  await batch.commit();
+};

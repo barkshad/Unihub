@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { Lock, Building2 } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -21,46 +21,46 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4 font-sans">
+      <div className="bg-white w-full max-w-sm rounded-xl shadow-sm border border-zinc-200 p-8">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white mx-auto mb-4">
-            <Lock className="w-6 h-6" />
+          <div className="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center text-zinc-900 mx-auto mb-4">
+            <Building2 className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Admin Login</h1>
-          <p className="text-gray-500 mt-2">Access the UniHub control panel</p>
+          <h1 className="text-xl font-semibold text-zinc-900 tracking-tight">Admin Login</h1>
+          <p className="text-zinc-500 mt-2 text-sm">Access the UniHub control panel</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm text-center">
+          <div className="bg-red-50 text-red-600 p-3 rounded-md mb-6 text-sm text-center border border-red-100">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Email Address</label>
             <input
               type="email"
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="w-full px-3 py-2 rounded-md border border-zinc-300 focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">Password</label>
             <input
               type="password"
               required
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+              className="w-full px-3 py-2 rounded-md border border-zinc-300 focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="w-full bg-zinc-900 text-white font-medium py-2.5 rounded-md hover:bg-zinc-800 transition-colors text-sm"
           >
             Sign In
           </button>

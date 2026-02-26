@@ -3,7 +3,7 @@ import { getSiteSettings, getProperties } from '@/services/firestore';
 import { SiteSettings, Property } from '@/types';
 import { Link } from 'react-router-dom';
 import PropertyCard from '@/components/PropertyCard';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, ShieldCheck, MessageSquare, GraduationCap } from 'lucide-react';
 
 export default function HomePage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
@@ -35,28 +35,33 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-6 h-6 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-indigo-900 text-white py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-neutral-900 text-white py-32 lg:py-48 overflow-hidden">
         {settings?.heroImage && (
-          <div className="absolute inset-0 z-0 opacity-20">
-            <img src={settings.heroImage} alt="Hero" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 z-0">
+            <img src={settings.heroImage} alt="Hero" className="w-full h-full object-cover opacity-40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent opacity-80" />
           </div>
         )}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-white">
             {settings?.heroTitle || "Find Your Perfect Home"}
           </h1>
-          <p className="text-xl md:text-2xl text-indigo-100 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-neutral-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
             {settings?.heroSubtitle || "Verified listings, direct agent contact, no hidden fees."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               to="/listings" 
-              className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full text-indigo-700 bg-white hover:bg-indigo-50 md:text-lg transition-all"
+              className="inline-flex items-center justify-center px-8 py-4 bg-white text-neutral-900 text-base font-semibold rounded-lg hover:bg-neutral-100 transition-colors"
             >
               {settings?.ctaText || "Browse Listings"}
             </Link>
@@ -65,26 +70,26 @@ export default function HomePage() {
       </section>
 
       {/* Featured Properties */}
-      <section className="py-16 bg-white">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-8">
+          <div className="flex justify-between items-end mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Featured Properties</h2>
-              <p className="mt-2 text-gray-600">Hand-picked verified listings for you</p>
+              <h2 className="text-3xl font-bold text-neutral-900 tracking-tight">Featured Properties</h2>
+              <p className="mt-3 text-neutral-500 text-lg">Hand-picked verified listings for you</p>
             </div>
-            <Link to="/listings" className="hidden sm:flex items-center text-indigo-600 font-medium hover:text-indigo-700">
+            <Link to="/listings" className="hidden sm:flex items-center text-neutral-900 font-medium hover:text-neutral-600 transition-colors">
               View all <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
             {featuredProperties.map(property => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </div>
 
-          <div className="mt-8 sm:hidden text-center">
-            <Link to="/listings" className="inline-flex items-center text-indigo-600 font-medium hover:text-indigo-700">
+          <div className="mt-12 sm:hidden text-center">
+            <Link to="/listings" className="inline-flex items-center text-neutral-900 font-medium hover:text-neutral-600">
               View all properties <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </div>
@@ -92,29 +97,29 @@ export default function HomePage() {
       </section>
 
       {/* Trust/Info Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-24 bg-neutral-50 border-t border-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div className="p-6">
-              <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div className="w-12 h-12 bg-white border border-neutral-200 text-neutral-900 rounded-lg flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Verified Listings</h3>
-              <p className="text-gray-600">Every property is manually verified by our team to ensure safety and quality.</p>
+              <h3 className="text-lg font-semibold mb-3 text-neutral-900">Verified Listings</h3>
+              <p className="text-neutral-500 leading-relaxed">Every property is manually verified by our team to ensure safety and quality.</p>
             </div>
             <div className="p-6">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" /></svg>
+              <div className="w-12 h-12 bg-white border border-neutral-200 text-neutral-900 rounded-lg flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <MessageSquare className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Direct Contact</h3>
-              <p className="text-gray-600">Connect directly with agents via WhatsApp. No middlemen, no hidden fees.</p>
+              <h3 className="text-lg font-semibold mb-3 text-neutral-900">Direct Contact</h3>
+              <p className="text-neutral-500 leading-relaxed">Connect directly with agents via WhatsApp. No middlemen, no hidden fees.</p>
             </div>
             <div className="p-6">
-              <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+              <div className="w-12 h-12 bg-white border border-neutral-200 text-neutral-900 rounded-lg flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <GraduationCap className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Student Focused</h3>
-              <p className="text-gray-600">Tailored specifically for university students looking for off-campus accommodation.</p>
+              <h3 className="text-lg font-semibold mb-3 text-neutral-900">Student Focused</h3>
+              <p className="text-neutral-500 leading-relaxed">Tailored specifically for university students looking for off-campus accommodation.</p>
             </div>
           </div>
         </div>

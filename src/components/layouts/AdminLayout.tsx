@@ -6,7 +6,8 @@ import {
   Users, 
   Settings, 
   LogOut, 
-  Tags
+  Tags,
+  Building2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
@@ -30,11 +31,14 @@ export default function AdminLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen bg-zinc-50 flex font-sans text-zinc-900">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col fixed h-full">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
-          <span className="text-xl font-bold text-indigo-600">UniHub CMS</span>
+      <aside className="w-64 bg-white border-r border-zinc-200 hidden md:flex flex-col fixed h-full z-10">
+        <div className="h-16 flex items-center px-6 border-b border-zinc-100">
+          <div className="flex items-center gap-2 text-zinc-900">
+            <Building2 className="w-6 h-6" />
+            <span className="text-lg font-semibold tracking-tight">UniHub CMS</span>
+          </div>
         </div>
         
         <nav className="flex-1 p-4 space-y-1">
@@ -46,25 +50,25 @@ export default function AdminLayout() {
                 key={link.name}
                 to={link.href}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200",
                   isActive 
-                    ? "bg-indigo-50 text-indigo-600" 
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-zinc-100 text-zinc-900" 
+                    : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900"
                 )}
               >
-                <link.icon className="w-5 h-5" />
+                <link.icon className="w-4 h-4" />
                 {link.name}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-zinc-100">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="flex items-center gap-3 px-3 py-2 w-full rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-200"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
             Sign Out
           </button>
         </div>
@@ -72,11 +76,16 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center px-8 md:hidden">
-           <span className="text-xl font-bold text-indigo-600">UniHub CMS</span>
+        <header className="bg-white border-b border-zinc-200 h-16 flex items-center px-6 md:hidden sticky top-0 z-20">
+           <div className="flex items-center gap-2 text-zinc-900">
+            <Building2 className="w-6 h-6" />
+            <span className="text-lg font-semibold tracking-tight">UniHub CMS</span>
+          </div>
         </header>
-        <main className="flex-1 p-8 overflow-y-auto">
-          <Outlet />
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-zinc-50">
+          <div className="max-w-7xl mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

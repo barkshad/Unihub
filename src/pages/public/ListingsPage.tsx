@@ -55,40 +55,47 @@ export default function ListingsPage() {
     setFilteredProperties(result);
   }, [properties, selectedCategory, locationQuery, priceRange]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-6 h-6 border-2 border-neutral-900 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="flex flex-col md:flex-row gap-12">
         {/* Filters Sidebar */}
         <div className={cn(
-          "md:w-64 flex-shrink-0",
-          "fixed inset-0 z-40 bg-white p-6 md:static md:bg-transparent md:p-0 md:block",
-          isFilterOpen ? "block" : "hidden"
+          "md:w-72 flex-shrink-0",
+          "fixed inset-0 z-40 bg-white p-6 md:static md:bg-transparent md:p-0 md:block transition-transform duration-300 ease-in-out",
+          isFilterOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}>
-          <div className="flex justify-between items-center mb-6 md:hidden">
-            <h2 className="text-xl font-bold">Filters</h2>
-            <button onClick={() => setIsFilterOpen(false)}><X /></button>
+          <div className="flex justify-between items-center mb-8 md:hidden">
+            <h2 className="text-xl font-bold text-neutral-900">Filters</h2>
+            <button onClick={() => setIsFilterOpen(false)} className="text-neutral-500 hover:text-neutral-900"><X /></button>
           </div>
 
-          <div className="space-y-6">
-            {/* Search Location */}
+          <div className="space-y-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-              <input
-                type="text"
-                placeholder="Search location..."
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                value={locationQuery}
-                onChange={(e) => setLocationQuery(e.target.value)}
-              />
+              <h3 className="text-sm font-semibold text-neutral-900 mb-4 uppercase tracking-wider">Search</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">Location</label>
+                  <input
+                    type="text"
+                    placeholder="Search location..."
+                    className="w-full rounded-lg border-neutral-200 shadow-sm focus:border-neutral-900 focus:ring-neutral-900 transition-colors"
+                    value={locationQuery}
+                    onChange={(e) => setLocationQuery(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Categories */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <div className="border-t border-neutral-100 pt-8">
+              <h3 className="text-sm font-semibold text-neutral-900 mb-4 uppercase tracking-wider">Category</h3>
               <select
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="w-full rounded-lg border-neutral-200 shadow-sm focus:border-neutral-900 focus:ring-neutral-900 transition-colors"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
@@ -99,20 +106,22 @@ export default function ListingsPage() {
               </select>
             </div>
 
-            {/* Price Range */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Max Price</label>
-              <input
-                type="range"
-                min="0"
-                max="2000000"
-                step="50000"
-                value={priceRange[1]}
-                onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                className="w-full"
-              />
-              <div className="text-sm text-gray-500 mt-1">
-                Up to ₦{priceRange[1].toLocaleString()}
+            <div className="border-t border-neutral-100 pt-8">
+              <h3 className="text-sm font-semibold text-neutral-900 mb-4 uppercase tracking-wider">Price Range</h3>
+              <div className="space-y-4">
+                <input
+                  type="range"
+                  min="0"
+                  max="2000000"
+                  step="50000"
+                  value={priceRange[1]}
+                  onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                  className="w-full accent-neutral-900"
+                />
+                <div className="flex justify-between text-sm text-neutral-600 font-medium">
+                  <span>₦0</span>
+                  <span>₦{priceRange[1].toLocaleString()}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -120,12 +129,12 @@ export default function ListingsPage() {
 
         {/* Main Content */}
         <div className="flex-1">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
               {filteredProperties.length} Properties Found
             </h1>
             <button
-              className="md:hidden flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700"
+              className="md:hidden flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 rounded-lg shadow-sm text-sm font-medium text-neutral-700 hover:bg-neutral-50"
               onClick={() => setIsFilterOpen(true)}
             >
               <Filter className="w-4 h-4" /> Filters
@@ -133,21 +142,21 @@ export default function ListingsPage() {
           </div>
 
           {filteredProperties.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
               {filteredProperties.map(property => (
                 <PropertyCard key={property.id} property={property} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-gray-50 rounded-xl">
-              <p className="text-gray-500 text-lg">No properties found matching your criteria.</p>
+            <div className="text-center py-32 bg-neutral-50 rounded-xl border border-neutral-100 dashed">
+              <p className="text-neutral-500 text-lg mb-4">No properties found matching your criteria.</p>
               <button 
                 onClick={() => {
                   setSelectedCategory('all');
                   setPriceRange([0, 1000000]);
                   setLocationQuery('');
                 }}
-                className="mt-4 text-indigo-600 font-medium hover:text-indigo-700"
+                className="text-neutral-900 font-semibold underline hover:text-neutral-600 transition-colors"
               >
                 Clear all filters
               </button>

@@ -3,7 +3,7 @@ import { getAgents, deleteAgent, createAgent, updateAgent } from '@/services/fir
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { Agent } from '@/types';
 import { useForm } from 'react-hook-form';
-import { Plus, Edit, Trash2, X, Upload, Loader2 } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Upload, Loader2, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminAgentsPage() {
@@ -80,10 +80,13 @@ export default function AdminAgentsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Agents</h1>
+        <div>
+          <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">Agents</h1>
+          <p className="text-zinc-500 mt-1 text-sm">Manage real estate agents.</p>
+        </div>
         <button 
           onClick={() => { setEditingAgent(null); reset(); setIsModalOpen(true); }}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-indigo-700"
+          className="bg-zinc-900 text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-zinc-800 transition-colors text-sm font-medium"
         >
           <Plus className="w-4 h-4" /> Add Agent
         </button>
@@ -91,25 +94,25 @@ export default function AdminAgentsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {agents.map(agent => (
-          <div key={agent.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
-            <div className="w-16 h-16 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
+          <div key={agent.id} className="bg-white p-6 rounded-xl shadow-sm border border-zinc-200 flex items-center gap-4">
+            <div className="w-16 h-16 bg-zinc-100 rounded-full overflow-hidden flex-shrink-0 border border-zinc-100">
               {agent.profilePhotoURL ? (
                 <img src={agent.profilePhotoURL} alt={agent.name} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-600 font-bold text-xl">
-                  {agent.name.charAt(0)}
+                <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-400">
+                  <User className="w-8 h-8" />
                 </div>
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-gray-900 truncate">{agent.name}</h3>
-              <p className="text-sm text-gray-500 truncate">{agent.phone}</p>
+              <h3 className="font-semibold text-zinc-900 truncate">{agent.name}</h3>
+              <p className="text-sm text-zinc-500 truncate">{agent.phone}</p>
             </div>
-            <div className="flex gap-2">
-              <button onClick={() => openEdit(agent)} className="p-2 text-gray-400 hover:text-indigo-600">
+            <div className="flex gap-1">
+              <button onClick={() => openEdit(agent)} className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors">
                 <Edit className="w-4 h-4" />
               </button>
-              <button onClick={() => handleDelete(agent.id!)} className="p-2 text-gray-400 hover:text-red-600">
+              <button onClick={() => handleDelete(agent.id!)} className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
@@ -119,39 +122,48 @@ export default function AdminAgentsPage() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl border border-zinc-200">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold">{editingAgent ? 'Edit Agent' : 'New Agent'}</h2>
-              <button onClick={() => setIsModalOpen(false)}><X className="w-5 h-5" /></button>
+              <h2 className="text-lg font-semibold text-zinc-900 tracking-tight">{editingAgent ? 'Edit Agent' : 'New Agent'}</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-zinc-400 hover:text-zinc-600"><X className="w-5 h-5" /></button>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input {...register('name', { required: true })} className="w-full rounded-lg border-gray-300" />
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">Name</label>
+                <input 
+                  {...register('name', { required: true })} 
+                  className="w-full px-3 py-2 rounded-md border border-zinc-300 focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all text-sm"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                <input {...register('phone', { required: true })} className="w-full rounded-lg border-gray-300" />
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">Phone</label>
+                <input 
+                  {...register('phone', { required: true })} 
+                  className="w-full px-3 py-2 rounded-md border border-zinc-300 focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all text-sm"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp Number</label>
-                <input {...register('whatsappNumber', { required: true })} className="w-full rounded-lg border-gray-300" />
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">WhatsApp Number</label>
+                <input 
+                  {...register('whatsappNumber', { required: true })} 
+                  className="w-full px-3 py-2 rounded-md border border-zinc-300 focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all text-sm"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">Profile Photo</label>
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                  <div className="w-16 h-16 bg-zinc-100 rounded-full overflow-hidden flex-shrink-0 border border-zinc-200">
                     {profilePhotoURL ? (
                       <img src={profilePhotoURL} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <div className="w-full h-full flex items-center justify-center text-zinc-400">
                         <Upload className="w-6 h-6" />
                       </div>
                     )}
                   </div>
                   <label className="flex-1">
-                    <div className={`flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <div className={`flex items-center justify-center w-full px-4 py-2 border border-zinc-300 rounded-md cursor-pointer hover:bg-zinc-50 transition-colors text-sm font-medium text-zinc-700 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       {uploading ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -175,7 +187,10 @@ export default function AdminAgentsPage() {
                 </div>
                 <input type="hidden" {...register('profilePhotoURL')} />
               </div>
-              <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700">
+              <button 
+                type="submit" 
+                className="w-full bg-zinc-900 text-white py-2.5 rounded-md font-medium hover:bg-zinc-800 transition-colors text-sm"
+              >
                 Save Agent
               </button>
             </form>
