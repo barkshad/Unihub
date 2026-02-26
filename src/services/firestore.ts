@@ -18,12 +18,27 @@ import { Property, Agent, Category, SiteSettings } from "@/types";
 // --- Properties ---
 
 export const getProperties = async (status?: string) => {
-  let q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+  let q;
   if (status) {
-    q = query(collection(db, "properties"), where("status", "==", status), orderBy("createdAt", "desc"));
+    // Remove orderBy to avoid index requirement
+    q = query(collection(db, "properties"), where("status", "==", status));
+  } else {
+    q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
   }
+  
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Property));
+  const properties = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Property));
+  
+  // Client-side sort if filtered by status (since we removed the orderBy clause)
+  if (status) {
+    properties.sort((a, b) => {
+      const timeA = a.createdAt?.seconds || 0;
+      const timeB = b.createdAt?.seconds || 0;
+      return timeB - timeA;
+    });
+  }
+  
+  return properties;
 };
 
 export const getProperty = async (id: string) => {
