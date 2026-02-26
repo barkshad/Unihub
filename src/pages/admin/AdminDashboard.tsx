@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getProperties, getAgents } from '@/services/firestore';
 import { Property, Agent } from '@/types';
-import { Home, Users, CheckCircle, XCircle } from 'lucide-react';
+import { Home, Users, CheckCircle, XCircle, Database } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -46,7 +47,16 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard Overview</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+        <Link 
+          to="/admin/seed" 
+          className="flex items-center gap-2 bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors"
+        >
+          <Database className="w-4 h-4" />
+          Seed Data
+        </Link>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card) => (

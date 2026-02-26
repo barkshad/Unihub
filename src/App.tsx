@@ -20,6 +20,7 @@ import AdminPropertyForm from '@/pages/admin/AdminPropertyForm';
 import AdminAgentsPage from '@/pages/admin/AdminAgentsPage';
 import AdminCategoriesPage from '@/pages/admin/AdminCategoriesPage';
 import AdminSettingsPage from '@/pages/admin/AdminSettingsPage';
+import SeederPage from '@/pages/admin/SeederPage';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
               <Route path="agents" element={<AdminAgentsPage />} />
               <Route path="categories" element={<AdminCategoriesPage />} />
               <Route path="settings" element={<AdminSettingsPage />} />
+              <Route path="seed" element={<SeederPage />} />
             </Route>
           </Route>
 
