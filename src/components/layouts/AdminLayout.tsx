@@ -20,6 +20,10 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  React.useEffect(() => {
+    document.title = "UniHub Admin CMS";
+  }, []);
+
   const handleLogout = async () => {
     await logout();
     navigate('/admin/login');

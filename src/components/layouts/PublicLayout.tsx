@@ -8,6 +8,10 @@ export default function PublicLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
+  React.useEffect(() => {
+    document.title = "UniHub - Student Housing";
+  }, []);
+
   const navLinks = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Listings', href: '/listings', icon: Search },
