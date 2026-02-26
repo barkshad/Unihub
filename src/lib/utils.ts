@@ -6,11 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('en-NG', {
+  return new Intl.NumberFormat('en-KE', {
     style: 'currency',
-    currency: 'NGN',
+    currency: 'KES',
     minimumFractionDigits: 0,
-  }).format(amount);
+  }).format(amount).replace('KES', 'KSh');
 }
 
 export function generateWhatsAppLink(phone: string, message: string) {

@@ -40,13 +40,6 @@ export default function PublicLayout() {
                   {link.name}
                 </Link>
               ))}
-              <Link
-                to="/admin"
-                className="text-sm font-medium text-neutral-400 hover:text-neutral-900 flex items-center gap-2 transition-colors"
-              >
-                <LogIn className="w-4 h-4" />
-                Admin
-              </Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -78,15 +71,6 @@ export default function PublicLayout() {
                   {link.name}
                 </Link>
               ))}
-              <div className="pt-4 mt-4 border-t border-neutral-100">
-                <Link
-                  to="/admin"
-                  className="block px-3 py-3 rounded-lg text-base font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Admin Login
-                </Link>
-              </div>
             </div>
           </div>
         )}

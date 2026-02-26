@@ -139,9 +139,10 @@ export const seedData = async () => {
 
   // 1. Create Categories
   const categories = [
-    { name: "Apartments", slug: "apartments", isActive: true, order: 0 },
-    { name: "Hostels", slug: "hostels", isActive: true, order: 1 },
-    { name: "Bedsitters", slug: "bedsitters", isActive: true, order: 2 }
+    { name: "Bedsitter", slug: "bedsitter", isActive: true, order: 0 },
+    { name: "Single Room", slug: "single-room", isActive: true, order: 1 },
+    { name: "One Bedroom", slug: "one-bedroom", isActive: true, order: 2 },
+    { name: "Two Bedroom", slug: "two-bedroom", isActive: true, order: 3 }
   ];
 
   const categoryIds: string[] = [];

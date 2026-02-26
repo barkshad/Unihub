@@ -71,7 +71,8 @@ export default function AdminPropertiesPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-zinc-50 text-zinc-500 font-medium border-b border-zinc-200">
               <tr>
@@ -133,16 +134,68 @@ export default function AdminPropertiesPage() {
                   </td>
                 </tr>
               ))}
-              {properties.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-500">
-                    No properties found. Click "Add Property" to create one.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden divide-y divide-zinc-100">
+          {properties.map((property) => (
+            <div key={property.id} className="p-4 flex flex-col gap-4">
+              <div className="flex items-start gap-4">
+                <div className="w-20 h-20 bg-zinc-100 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-100">
+                  {property.media[0] && (
+                    <img src={property.media[0].secure_url} alt="" className="w-full h-full object-cover" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-zinc-900 truncate">{property.title}</div>
+                  <div className="text-zinc-500 text-xs mt-1">{property.location}</div>
+                  <div className="mt-2 font-medium text-zinc-900">
+                    {formatCurrency(property.price)}
+                    <span className="text-zinc-400 font-normal text-xs ml-1">/yr</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between pt-2">
+                <button 
+                  onClick={() => toggleStatus(property)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    property.status === 'available' 
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100' 
+                      : property.status === 'occupied' 
+                        ? 'bg-zinc-100 text-zinc-600 border-zinc-200 hover:bg-zinc-200' 
+                        : 'bg-zinc-50 text-zinc-500 border-zinc-200'
+                  }`}
+                >
+                  {property.status.charAt(0).toUpperCase() + property.status.slice(1)}
+                </button>
+                
+                <div className="flex items-center gap-2">
+                  <Link 
+                    to={`/admin/properties/${property.id}`} 
+                    className="p-2 text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Link>
+                  <button 
+                    onClick={() => handleDelete(property.id!)} 
+                    className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {properties.length === 0 && (
+          <div className="p-12 text-center text-zinc-500 text-sm border-t border-zinc-100">
+            No properties found. Click "Add Property" to create one.
+          </div>
+        )}
       </div>
     </div>
   );

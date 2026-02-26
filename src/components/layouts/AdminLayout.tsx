@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -7,7 +7,9 @@ import {
   Settings, 
   LogOut, 
   Tags,
-  Building2
+  Building2,
+  Menu,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
@@ -16,6 +18,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -33,15 +36,21 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-zinc-50 flex font-sans text-zinc-900">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-zinc-200 hidden md:flex flex-col fixed h-full z-10">
-        <div className="h-16 flex items-center px-6 border-b border-zinc-100">
+      <aside className={cn(
+        "w-64 bg-white border-r border-zinc-200 flex-col fixed h-full z-30 transition-transform duration-300 md:translate-x-0",
+        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-100">
           <div className="flex items-center gap-2 text-zinc-900">
             <Building2 className="w-6 h-6" />
             <span className="text-lg font-semibold tracking-tight">UniHub CMS</span>
           </div>
+          <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden text-zinc-400 hover:text-zinc-600">
+            <X className="w-5 h-5" />
+          </button>
         </div>
         
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.href || 
                              (link.href !== '/admin' && location.pathname.startsWith(link.href));
@@ -49,6 +58,7 @@ export default function AdminLayout() {
               <Link
                 key={link.name}
                 to={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200",
                   isActive 
@@ -74,15 +84,26 @@ export default function AdminLayout() {
         </div>
       </aside>
 
+      {/* Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 z-20 md:hidden backdrop-blur-sm"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
-        <header className="bg-white border-b border-zinc-200 h-16 flex items-center px-6 md:hidden sticky top-0 z-20">
+        <header className="bg-white border-b border-zinc-200 h-16 flex items-center justify-between px-4 md:hidden sticky top-0 z-20">
            <div className="flex items-center gap-2 text-zinc-900">
             <Building2 className="w-6 h-6" />
             <span className="text-lg font-semibold tracking-tight">UniHub CMS</span>
           </div>
+          <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 text-zinc-500 hover:text-zinc-900">
+            <Menu className="w-6 h-6" />
+          </button>
         </header>
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-zinc-50">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-zinc-50">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
