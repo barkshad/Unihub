@@ -27,7 +27,10 @@ export const getProperties = async (status?: string) => {
   }
   
   const snapshot = await getDocs(q);
-  const properties = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Property));
+  const properties = snapshot.docs.map(doc => {
+    const data = doc.data();
+    return { id: doc.id, ...(data as any) } as Property;
+  });
   
   // Client-side sort if filtered by status (since we removed the orderBy clause)
   if (status) {

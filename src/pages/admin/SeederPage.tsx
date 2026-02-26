@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createCategory, createAgent, createProperty, updateSiteSettings } from '@/services/firestore';
+import { createCategory, createAgent, createProperty, updateSiteSettings, getAgents, updateAgent } from '@/services/firestore';
 import { Category, Agent, Property, SiteSettings } from '@/types';
 import { serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
@@ -9,6 +9,34 @@ export default function SeederPage() {
   const [logs, setLogs] = useState<string[]>([]);
 
   const addLog = (msg: string) => setLogs(prev => [...prev, msg]);
+
+  const updateAllAgentsPhone = async () => {
+    if (!window.confirm("This will update ALL agents to the new phone number (+254 113 562686). Continue?")) return;
+    setLoading(true);
+    setLogs([]);
+    addLog("Updating all agents...");
+    
+    try {
+      const agents = await getAgents();
+      for (const agent of agents) {
+        if (agent.id) {
+          await updateAgent(agent.id, {
+            phone: "+254 113 562686",
+            whatsappNumber: "254113562686"
+          });
+          addLog(`Updated agent: ${agent.name}`);
+        }
+      }
+      addLog("All agents updated.");
+      toast.success("Agents updated successfully");
+    } catch (error) {
+      console.error(error);
+      addLog(`Error: ${error}`);
+      toast.error("Update failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const seedData = async () => {
     if (!window.confirm("This will add sample data to your database. Continue?")) return;
@@ -51,15 +79,15 @@ export default function SeederPage() {
       const agentsData = [
         { 
           name: "John Doe", 
-          phone: "+2348012345678", 
-          whatsappNumber: "2348012345678", 
+          phone: "+254 113 562686", 
+          whatsappNumber: "254113562686", 
           profilePhotoURL: "https://randomuser.me/api/portraits/men/32.jpg",
           isActive: true 
         },
         { 
           name: "Jane Smith", 
-          phone: "+2348098765432", 
-          whatsappNumber: "2348098765432", 
+          phone: "+254 113 562686", 
+          whatsappNumber: "254113562686", 
           profilePhotoURL: "https://randomuser.me/api/portraits/women/44.jpg",
           isActive: true 
         },
@@ -214,13 +242,23 @@ export default function SeederPage() {
         Click the button below to populate the database with sample data (Categories, Agents, Properties, Settings).
       </p>
       
-      <button
-        onClick={seedData}
-        disabled={loading}
-        className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 disabled:opacity-50"
-      >
-        {loading ? 'Seeding...' : 'Seed Database'}
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={seedData}
+          disabled={loading}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-indigo-700 disabled:opacity-50"
+        >
+          {loading ? 'Processing...' : 'Seed Database'}
+        </button>
+        
+        <button
+          onClick={updateAllAgentsPhone}
+          disabled={loading}
+          className="bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 disabled:opacity-50"
+        >
+          Update Agent Phones
+        </button>
+      </div>
 
       <div className="mt-8 bg-gray-100 p-4 rounded-lg h-64 overflow-y-auto font-mono text-sm">
         {logs.length === 0 ? (

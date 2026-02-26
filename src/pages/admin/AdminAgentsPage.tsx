@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { getAgents, deleteAgent, createAgent, updateAgent } from '@/services/firestore';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 import { Agent } from '@/types';
 import { useForm } from 'react-hook-form';
-import { Plus, Edit, Trash2, X } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Upload, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminAgentsPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const [uploading, setUploading] = useState(false);
   
-  const { register, handleSubmit, reset, setValue } = useForm<Agent>();
+  const { register, handleSubmit, reset, setValue, watch } = useForm<Agent>();
+  const profilePhotoURL = watch('profilePhotoURL');
 
   useEffect(() => {
     loadAgents();
@@ -20,6 +23,21 @@ export default function AdminAgentsPage() {
     const data = await getAgents();
     setAgents(data);
   }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return;
+    setUploading(true);
+    try {
+      const file = e.target.files[0];
+      const result = await uploadToCloudinary(file, 'unihub/agents');
+      setValue('profilePhotoURL', result.secure_url);
+      toast.success('Photo uploaded');
+    } catch (error) {
+      toast.error('Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = async (data: Agent) => {
     try {
@@ -121,8 +139,41 @@ export default function AdminAgentsPage() {
                 <input {...register('whatsappNumber', { required: true })} className="w-full rounded-lg border-gray-300" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo URL</label>
-                <input {...register('profilePhotoURL')} className="w-full rounded-lg border-gray-300" placeholder="https://..." />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
+                    {profilePhotoURL ? (
+                      <img src={profilePhotoURL} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <Upload className="w-6 h-6" />
+                      </div>
+                    )}
+                  </div>
+                  <label className="flex-1">
+                    <div className={`flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      {uploading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4 mr-2" />
+                          Upload Photo
+                        </>
+                      )}
+                    </div>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleImageUpload} 
+                      className="hidden" 
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+                <input type="hidden" {...register('profilePhotoURL')} />
               </div>
               <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700">
                 Save Agent
