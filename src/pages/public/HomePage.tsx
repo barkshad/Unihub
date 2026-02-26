@@ -48,7 +48,7 @@ export default function HomePage() {
         )}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            {settings?.heroTitle || "Find Your Perfect Student Home"}
+            {settings?.heroTitle || "Find Your Perfect Home"}
           </h1>
           <p className="text-xl md:text-2xl text-indigo-100 mb-10 max-w-2xl mx-auto">
             {settings?.heroSubtitle || "Verified listings, direct agent contact, no hidden fees."}

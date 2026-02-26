@@ -21,7 +21,7 @@ export default function SeederPage() {
       // 1. Seed Settings
       addLog("Seeding Settings...");
       const settings: SiteSettings = {
-        heroTitle: "Find Your Perfect Student Home",
+        heroTitle: "Find Your Perfect Home",
         heroSubtitle: "Verified listings, direct agent contact, no hidden fees.",
         heroImage: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80",
         ctaText: "Browse Listings",
